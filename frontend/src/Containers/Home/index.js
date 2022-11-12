@@ -12,6 +12,9 @@ import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
 import * as actions from "../../actions"
+import Recipe from "../Recipe"
+import { withRouter } from "react-router-dom"
+import queryString from "query-string"
 
 const ingredientList = ["flour", "sugar", "salt", "butter", "milk"]
 
@@ -21,13 +24,31 @@ class Home extends Component {
     this.handleSearch = this.handleSearch.bind(this)
     this.handleIngredient = this.handleIngredient.bind(this)
     this.fetchSearch = this.fetchSearch.bind(this)
+    this.updateUrl = this.updateUrl.bind(this)
+    this.searchParams = queryString.parse(props.location.search);
+    this.searchParamsExist = !!props.location.search
     this.state = {
       term: "",
       ingredients: ["milk"],
+      ...this.searchParams
+    }
+  }
+
+  componentDidMount() {
+    if (this.searchParamsExist) {
+      this.fetchSearch()
+    }
+  }
+
+  updateUrl(update) {
+    const newSearch = queryString.stringify({ ...this.searchParams, ...update });
+    if (newSearch !== this.props.location.search) {
+      this.props.history.push({ search: newSearch })
     }
   }
   fetchSearch() {
-    // TODO: something is missing here for fetching
+    this.props.searchRecipes(this.state.term, this.state.ingredients);
+    this.updateUrl(this.state)
   }
   handleSearch(event) {
     const term = event.target.value
@@ -77,6 +98,7 @@ class Home extends Component {
             {recipes.map((recipe) => (
               <ListItem key={recipe.id}>
                 <ListItemText primary={recipe.name} />
+                <Button onClick={() => this.props.setCurrentRecipeId(recipe.id)}>view</Button>
               </ListItem>
             ))}
           </List>
@@ -87,23 +109,26 @@ class Home extends Component {
           TODO: Add a recipe component here.
           I'm expecting you to have it return null or a component based on the redux state, not passing any props from here
           I want to see how you wire up a component with connect and build actions.
-        */}
+        */
+          this.props.selectedRecipeId && <Recipe />
+        }
       </HomeWrapper>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  const { search } = state
-  return { ...search }
+  const { search, recipe: { id: selectedRecipeId } } = state
+  return { ...search, selectedRecipeId }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       searchRecipes: actions.searchRecipes,
+      setCurrentRecipeId: actions.setCurrentRecipeId
     },
     dispatch
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home))
