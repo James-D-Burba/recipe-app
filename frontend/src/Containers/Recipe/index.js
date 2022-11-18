@@ -13,26 +13,12 @@ class Recipe extends Component {
 
     constructor(props) {
         super(props)
-        this.retrieveRecipe = this.retrieveRecipe.bind(this)
-    }
-
-    retrieveRecipe() {
-        this.props.getRecipe(this.props.id)
     }
 
     componentDidMount() {
-        if (this.props.id) {
-            this.retrieveRecipe()
-        }
         const idFromParams = this.props.match?.params?.id
         if (idFromParams && (this.props.id !== idFromParams)) {
-            this.props.setCurrentRecipeId(idFromParams)
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.id !== prevProps.id) {
-            this.retrieveRecipe()
+            this.props.getRecipe(idFromParams)
         }
     }
 
@@ -71,7 +57,6 @@ const mapDispatchToProps = (dispatch) =>
     bindActionCreators(
         {
             getRecipe: actions.getRecipe,
-            setCurrentRecipeId: actions.setCurrentRecipeId
         },
         dispatch
     )

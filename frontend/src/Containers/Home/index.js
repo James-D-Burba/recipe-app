@@ -98,7 +98,7 @@ class Home extends Component {
             {recipes.map((recipe) => (
               <ListItem key={recipe.id}>
                 <ListItemText primary={recipe.name} />
-                <Button onClick={() => this.props.setCurrentRecipeId(recipe.id)}>view</Button>
+                <Button onClick={() => this.props.getRecipe(recipe.id)}>view</Button>
               </ListItem>
             ))}
           </List>
@@ -110,7 +110,7 @@ class Home extends Component {
           I'm expecting you to have it return null or a component based on the redux state, not passing any props from here
           I want to see how you wire up a component with connect and build actions.
         */
-          this.props.selectedRecipeId && <Recipe />
+          this.props.recipeName && <Recipe />
         }
       </HomeWrapper>
     )
@@ -118,15 +118,15 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { search, recipe: { id: selectedRecipeId } } = state
-  return { ...search, selectedRecipeId }
+  const { search, recipe: { name: recipeName } } = state
+  return { ...search, recipeName }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       searchRecipes: actions.searchRecipes,
-      setCurrentRecipeId: actions.setCurrentRecipeId
+      getRecipe: actions.getRecipe,
     },
     dispatch
   )

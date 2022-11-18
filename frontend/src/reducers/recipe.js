@@ -1,4 +1,4 @@
-import { GET_RECIPE, RECEIVE_RECIPE, FAIL_RECIPE, CURRENT_RECIPE } from "../actions"
+import { GET_RECIPE, RECEIVE_RECIPE, FAIL_RECIPE } from "../actions"
 
 const initialState = {
   id: null,
@@ -21,10 +21,6 @@ const recipeFailed = (state, payload) => {
   return { ...state, isLoading: false, error: payload }
 }
 
-const currentRecipeUpdate = (state, id) => {
-  return { ...state, id }
-}
-
 export default (state = initialState, { type, payload, id }) => {
   switch (type) {
     case GET_RECIPE:
@@ -33,8 +29,6 @@ export default (state = initialState, { type, payload, id }) => {
       return recipeFetched(state, payload)
     case FAIL_RECIPE:
       return recipeFailed(state, payload)
-    case CURRENT_RECIPE:
-      return currentRecipeUpdate(state, id)
     default:
       return state
   }
