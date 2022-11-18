@@ -20,12 +20,11 @@ const WrappedRouter = () => (
     <React.StrictMode>
       <BrowserRouter>
         <Switch>
+          <Route exact path='/recipe/:id'>
+            <Recipe />
+          </Route>
           <Route exact path='/'>
             <Home />
-          </Route>
-          // cant get /recipe/:id to work, but no idea why
-          <Route exact path='/:id'>
-            <Recipe />
           </Route>
         </Switch>
       </BrowserRouter>

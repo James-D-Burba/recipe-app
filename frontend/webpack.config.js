@@ -26,6 +26,8 @@ module.exports = {
   output: {
     path: buildDir,
     filename: "[name].bundle.js",
+    // https://stackoverflow.com/questions/37962559/using-webpack-with-react-router-bundle-js-not-found
+    publicPath: '/'
   },
   module: {
     rules: [
